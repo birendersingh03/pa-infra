@@ -1,0 +1,36 @@
+---
+  AWSTemplateFormatVersion: '2010-09-09'
+  Description: "PA VPC Internet gateways"
+  Metadata:  {}
+
+  Parameters:
+    pVPCNAME:
+      Type: String
+
+  Resources:
+    igwGATEWAY01:
+      Type: AWS::EC2::InternetGateway
+      DeletionPolicy: Delete
+      Properties:
+        Tags:
+        - Key: Name
+          Value: "IGw-PA-01"
+
+    igwattachGATEWAY01:
+      Type: AWS::EC2::VPCGatewayAttachment
+      DeletionPolicy: Delete
+      Properties:
+        VpcId:         
+          Fn::ImportValue:
+            Fn::Sub: "EXP-${pVPCNAME}-VPC01"
+        InternetGatewayId:
+          Ref: igwGATEWAY01
+
+  Outputs:
+    outigwGATEWAY01:
+      Description: Reference to Internet gateway
+      Value:
+        Ref: igwGATEWAY01
+      Export:
+        Name: 
+          Fn::Sub: "EXP-${pVPCNAME}-igwGATEWAY01"
