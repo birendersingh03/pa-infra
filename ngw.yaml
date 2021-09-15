@@ -1,0 +1,33 @@
+---
+  AWSTemplateFormatVersion: '2010-09-09'
+  Description: "PA VPC NAT gateways"
+  Metadata:  {}
+
+  Parameters:
+    pVPCNAME:
+      Type: String
+
+  Resources:
+    natgwPRIV01a:
+      Type: AWS::EC2::NatGateway
+      DeletionPolicy: Delete
+      Properties:
+        AllocationId:
+          Fn::ImportValue:
+            Fn::Sub: "EXP-${pVPCNAME}-eipNATPRIV01A-AllocationId"
+        SubnetId:
+          Fn::ImportValue:
+            Fn::Sub: "EXP-${pVPCNAME}-EC2SubnetPub1a"
+        Tags:
+        - Key: Name
+          Value: "NAT-PA-Priv-01-a"       
+            
+  Outputs:
+    outnatgwPRIV01a:
+      Description: Reference to NAT GW natgwPRIV01a
+      Value:
+        Ref: natgwPRIV01a
+      Export:
+        Name: 
+          Fn::Sub: "EXP-${pVPCNAME}-natgwPRIV01a"
+          
