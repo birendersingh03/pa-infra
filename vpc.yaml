@@ -1,0 +1,34 @@
+  AWSTemplateFormatVersion: '2010-09-09'
+  Description: "PA-VPC stack"
+  Parameters:
+    # Specify CIDR for new VPC
+    pVPCNAME:
+      Type: String  
+  Resources:    
+    EC2VPC:
+        Type: "AWS::EC2::VPC"
+        Properties:
+            CidrBlock: "10.0.0.0/24"
+            EnableDnsSupport: true
+            EnableDnsHostnames: true
+            InstanceTenancy: "default"
+            Tags: 
+            - Key: "Environment"
+              Value: "Dev"
+            - Key: "Name"
+              Value: 
+                 Ref: pVPCNAME
+            - Key: "CreatedBY"
+              Value: "birender.singh@nagarro.com"
+            - Key: "Project"
+              Value: "Promotion Assessment"
+            - Key: "Owner"
+              Value: "birender.singh@nagarro.com"           
+  Outputs:
+    outVPC01:
+      Description: Reference to VPC
+      Value:
+        Ref: EC2VPC
+      Export:
+        Name: 
+          Fn::Sub: "EXP-${pVPCNAME}-VPC01"              
