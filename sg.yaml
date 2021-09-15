@@ -1,0 +1,148 @@
+---
+  AWSTemplateFormatVersion: '2010-09-09'
+  Description: "PA general Security Groups"
+
+  Parameters:
+    pVPCNAME:
+      Type: String
+
+
+  Resources:
+    SecurityGroupRDS1:
+        Type: "AWS::EC2::SecurityGroup"
+        Properties:
+            GroupDescription: "rds"
+            GroupName: "sg_rds_1"
+            Tags: 
+              - 
+                Key: "Owner"
+                Value: "birender.singh@nagarro.com"
+            VpcId: 
+              Fn::ImportValue:
+                Fn::Sub: "EXP-${pVPCNAME}-VPC01"
+            SecurityGroupIngress: 
+              - 
+                CidrIp: "0.0.0.0/0"
+                FromPort: 0
+                IpProtocol: "tcp"
+                ToPort: 65535
+            SecurityGroupEgress: 
+              - 
+                CidrIp: "0.0.0.0/0"
+                IpProtocol: "-1"   
+    SecurityGroupPriv1:
+        Type: "AWS::EC2::SecurityGroup"
+        Properties:
+            GroupDescription: "sg for private subnet"
+            GroupName: "sg_pri-1"
+            Tags: 
+              - 
+                Key: "Owner"
+                Value: "birender.singh@nagarro.com"
+            VpcId: 
+              Fn::ImportValue:
+                Fn::Sub: "EXP-${pVPCNAME}-VPC01"
+            SecurityGroupIngress: 
+              - 
+                SourceSecurityGroupId: !Ref SecurityGroupPub1
+                FromPort: 0
+                IpProtocol: "tcp"
+                ToPort: 65535
+              - 
+                SourceSecurityGroupId: !Ref SecurityGroupRDS1
+                FromPort: 0
+                IpProtocol: "tcp"
+                ToPort: 65535
+
+              - 
+                CidrIp: "0.0.0.0/0"
+                FromPort: 22
+                IpProtocol: "tcp"
+                ToPort: 22
+              - 
+                CidrIp: "0.0.0.0/0"
+                FromPort: 443
+                IpProtocol: "tcp"
+                ToPort: 443
+            SecurityGroupEgress: 
+              - 
+                CidrIp: "0.0.0.0/0"
+                IpProtocol: "-1"  
+    SecurityGroupPub1:
+        Type: "AWS::EC2::SecurityGroup"
+        Properties:
+            GroupDescription: "sg for pub subnet"
+            GroupName: "sg_pub_1"
+            Tags: 
+              - 
+                Key: "Owner"
+                Value: "birender.singh@nagarro.com"
+            VpcId: 
+              Fn::ImportValue:
+                Fn::Sub: "EXP-${pVPCNAME}-VPC01"
+            SecurityGroupIngress: 
+              - 
+                CidrIp: "0.0.0.0/0"
+                FromPort: 1433
+                IpProtocol: "tcp"
+                ToPort: 1433
+              - 
+                CidrIp: "0.0.0.0/0"
+                FromPort: 80
+                IpProtocol: "tcp"
+                ToPort: 80
+              - 
+                CidrIp: "0.0.0.0/0"
+                FromPort: 10933
+                IpProtocol: "tcp"
+                ToPort: 10933
+              - 
+                CidrIp: "0.0.0.0/0"
+                FromPort: 8080
+                IpProtocol: "tcp"
+                ToPort: 8080
+              - 
+                CidrIp: "0.0.0.0/0"
+                FromPort: 22
+                IpProtocol: "tcp"
+                ToPort: 22
+              - 
+                CidrIp: "0.0.0.0/0"
+                FromPort: 4567
+                IpProtocol: "tcp"
+                ToPort: 4567
+              - 
+                CidrIp: "0.0.0.0/0"
+                FromPort: 443
+                IpProtocol: "tcp"
+                ToPort: 443
+            SecurityGroupEgress: 
+              - 
+                CidrIp: "0.0.0.0/0"
+                IpProtocol: "-1"                
+
+  Outputs:
+    outSecurityGroupRDS1:
+      Description: Reference to SG SecurityGroupRDS1
+      Value:
+        Ref: SecurityGroupRDS1
+      Export:
+        Name: 
+          Fn::Sub: "EXP-${pVPCNAME}-SecurityGroupRDS1"
+          
+    outSecurityGroupPriv1:
+      Description: Reference to SG SecurityGroupPriv1
+      Value:
+        Ref: SecurityGroupPriv1
+      Export:
+        Name: 
+          Fn::Sub: "EXP-${pVPCNAME}-SecurityGroupPriv1"
+
+    outSecurityGroupPub1:
+      Description: Reference to SG SecurityGroupPub1
+      Value:
+        Ref: SecurityGroupPub1
+      Export:
+        Name: 
+          Fn::Sub: "EXP-${pVPCNAME}-SecurityGroupPub1"
+
