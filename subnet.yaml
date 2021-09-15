@@ -72,7 +72,7 @@
         Ref: EC2SubnetPub1a
       Export:
         Name: 
-          Fn::Sub: "EXP-${pVPCNAME}-EC2SubnetPub1a"
+          Fn::Sub: "EXP-${pVPCNAME}-EC2SubnetPub1b"
 
     outEC2SubnetPub1b:
       Description: Reference to Subnet EC2SubnetPub1b
