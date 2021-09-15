@@ -114,7 +114,7 @@
               Ref: rtPriv1 
             SubnetId: 
               Fn::ImportValue:
-                Fn::Sub: "EXP-${pVPCNAME}-EC2SubnetPriv1a"                
+                Fn::Sub: "EXP-${pVPCNAME}-EC2SubnetPriv1b"                
 
 
 
