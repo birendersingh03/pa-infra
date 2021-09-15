@@ -8,6 +8,7 @@
     pVPCNAME:
       Description: Name tag for the VPC (i.e. Prd, Dev, POC)
       Type: String
+      Default: pa-vpc
 
   Mappings: {}
 
