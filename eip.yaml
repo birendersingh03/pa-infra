@@ -1,0 +1,66 @@
+---
+  AWSTemplateFormatVersion: '2010-09-09'
+  Description: "PA VPC Elastic IPs"
+  Metadata:  {}
+
+  Parameters:
+    pVPCNAME:
+      Type: String
+      
+  Mappings:  {}
+
+  Conditions:  {}
+
+  Resources:
+    eipNATPRIV01A:
+      Type: AWS::EC2::EIP
+      DeletionPolicy: Delete
+      Properties:
+        Domain: vpc
+        Tags: 
+          - Key: "Owner"
+            Value: "birender.singh@nagarro.com"
+    eipNATPRIV01B:
+      Type: AWS::EC2::EIP
+      DeletionPolicy: Delete
+      Properties:
+        Domain: vpc
+        Tags: 
+          - Key: "Owner"
+            Value: "birender.singh@nagarro.com"            
+
+  Outputs:
+    outeipNATPRIV01A:
+      Description: Reference to EIP for AZ A
+      Value:
+        Ref: eipNATPRIV01A
+      Export:
+        Name: 
+          Fn::Sub: "EXP-${pVPCNAME}-eipNATPRIV01A"
+    outeipNATPRIV01B:
+      Description: Reference to EIP for AZ A
+      Value:
+        Ref: eipNATPRIV01B
+      Export:
+        Name: 
+          Fn::Sub: "EXP-${pVPCNAME}-eipNATPRIV01B"          
+
+
+    outeipNATPRIV01Aallocationid:
+      Description: Reference to AllocationId for EIP for AZ A
+      Value:
+        Fn::GetAtt:
+        - eipNATPRIV01A
+        - AllocationId
+      Export:
+        Name: 
+          Fn::Sub: "EXP-${pVPCNAME}-eipNATPRIV01A-AllocationId"
+    outeipNATPRIV01Ballocationid:
+      Description: Reference to AllocationId for EIP for AZ A
+      Value:
+        Fn::GetAtt:
+        - eipNATPRIV01B
+        - AllocationId
+      Export:
+        Name: 
+          Fn::Sub: "EXP-${pVPCNAME}-eipNATPRIV01B-AllocationId"          
