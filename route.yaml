@@ -1,0 +1,144 @@
+---
+  AWSTemplateFormatVersion: '2010-09-09'
+  Description: "PA routes"
+  Metadata:  {}
+
+  Parameters:
+    pVPCNAME:
+      Type: String
+
+  Resources:
+    rtRDS:
+      Type: AWS::EC2::RouteTable
+      DeletionPolicy: Delete
+      Properties:
+        VpcId:
+          Fn::ImportValue:
+            Fn::Sub: "EXP-${pVPCNAME}-VPC01"
+        Tags:
+          - 
+            Key: Name
+            Value: "rt-rds"
+    rtPriv1:
+      Type: AWS::EC2::RouteTable
+      DeletionPolicy: Delete
+      Properties:
+        VpcId:
+          Fn::ImportValue:
+            Fn::Sub: "EXP-${pVPCNAME}-VPC01"
+        Tags:
+        - Key: Name
+          Value: "rt-priv1"         
+    rtMain:
+      Type: AWS::EC2::RouteTable
+      DeletionPolicy: Delete
+      Properties:
+        VpcId:
+          Fn::ImportValue:
+            Fn::Sub: "EXP-${pVPCNAME}-VPC01"
+        Tags:
+        - Key: Name
+          Value: "rt-main"          
+          
+#    routes01rtRDS:
+ #     Type: AWS::EC2::Route
+  #    DeletionPolicy: Delete
+   #   Properties:
+    #    RouteTableId:
+     #     Ref: rtRDS
+      #  DestinationCidrBlock: '0.0.0.0/0'
+    routes01rtMain:
+      Type: AWS::EC2::Route
+      DeletionPolicy: Delete
+      Properties:
+        RouteTableId:
+          Ref: rtMain
+        DestinationCidrBlock: '0.0.0.0/0'
+        GatewayId:
+          Fn::ImportValue:
+            Fn::Sub: "EXP-${pVPCNAME}-igwGATEWAY01"
+    routes01rtPriv1:
+      Type: AWS::EC2::Route
+      DeletionPolicy: Delete
+      Properties:
+        RouteTableId:
+          Ref: rtPriv1
+        DestinationCidrBlock: '0.0.0.0/0'
+        NatGatewayId:
+          Fn::ImportValue:
+            Fn::Sub: "EXP-${pVPCNAME}-natgwPRIV01a"      
+    EC2SubnetRouteTableAssociationRDS1:
+        Type: "AWS::EC2::SubnetRouteTableAssociation"
+        Properties:
+            RouteTableId: 
+              Ref: rtRDS 
+            SubnetId: 
+              Fn::ImportValue:
+                Fn::Sub: "EXP-${pVPCNAME}-EC2SubnetRDS1" 
+    EC2SubnetRouteTableAssociationRDS2:
+        Type: "AWS::EC2::SubnetRouteTableAssociation"
+        Properties:
+            RouteTableId: 
+              Ref: rtRDS 
+            SubnetId: 
+              Fn::ImportValue:
+                Fn::Sub: "EXP-${pVPCNAME}-EC2SubnetRDS2"   
+    EC2SubnetRouteTableAssociationMain1:
+        Type: "AWS::EC2::SubnetRouteTableAssociation"
+        Properties:
+            RouteTableId: 
+              Ref: rtMain 
+            SubnetId: 
+              Fn::ImportValue:
+                Fn::Sub: "EXP-${pVPCNAME}-EC2SubnetPub1a" 
+    EC2SubnetRouteTableAssociationMain2:
+        Type: "AWS::EC2::SubnetRouteTableAssociation"
+        Properties:
+            RouteTableId: 
+              Ref: rtMain 
+            SubnetId: 
+              Fn::ImportValue:
+                Fn::Sub: "EXP-${pVPCNAME}-EC2SubnetPub1b"  
+    EC2SubnetRouteTableAssociationPriv1:
+        Type: "AWS::EC2::SubnetRouteTableAssociation"
+        Properties:
+            RouteTableId: 
+              Ref: rtPriv1 
+            SubnetId: 
+              Fn::ImportValue:
+                Fn::Sub: "EXP-${pVPCNAME}-EC2SubnetPriv1a" 
+    EC2SubnetRouteTableAssociationPriv2:
+        Type: "AWS::EC2::SubnetRouteTableAssociation"
+        Properties:
+            RouteTableId: 
+              Ref: rtPriv1 
+            SubnetId: 
+              Fn::ImportValue:
+                Fn::Sub: "EXP-${pVPCNAME}-EC2SubnetPriv1a"                
+
+
+
+  Outputs:
+    outrtRDS:
+      Description: Reference to routing table rtRDS
+      Value:
+        Ref: rtRDS
+      Export:
+        Name: 
+          Fn::Sub: "EXP-${pVPCNAME}-rtRDS"
+
+    outrtMain:
+      Description: Reference to routing table rtMain
+      Value:
+        Ref: rtMain
+      Export:
+        Name: 
+          Fn::Sub: "EXP-${pVPCNAME}-rtMain"
+     
+    outrtPriv1:
+      Description: Reference to routing table rtPriv1
+      Value:
+        Ref: rtPriv1
+      Export:
+        Name: 
+          Fn::Sub: "EXP-${pVPCNAME}-rtPriv1"     
