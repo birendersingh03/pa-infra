@@ -1,0 +1,116 @@
+---
+  AWSTemplateFormatVersion: '2010-09-09'
+  Description: "PA VPC subnets"
+  Parameters:
+    pVPCNAME:
+      Type: String
+
+  Resources:
+    EC2SubnetPub1b:
+        Type: "AWS::EC2::Subnet"
+        Properties:
+            AvailabilityZone: !GetAtt EC2SubnetRDS2.AvailabilityZone
+            CidrBlock: "10.0.0.32/27"
+            VpcId:
+              Fn::ImportValue:
+                Fn::Sub: "EXP-${pVPCNAME}-VPC01"
+            MapPublicIpOnLaunch: true
+
+    EC2SubnetRDS2:
+        Type: "AWS::EC2::Subnet"
+        Properties:
+            AvailabilityZone: !GetAtt EC2SubnetPriv1b.AvailabilityZone
+            CidrBlock: "10.0.0.160/27"
+            VpcId:
+              Fn::ImportValue:
+                Fn::Sub: "EXP-${pVPCNAME}-VPC01"
+            MapPublicIpOnLaunch: false
+
+    EC2SubnetRDS1:
+        Type: "AWS::EC2::Subnet"
+        Properties:
+            AvailabilityZone: !GetAtt EC2SubnetPriv1a.AvailabilityZone
+            CidrBlock: "10.0.0.128/27"
+            VpcId:
+              Fn::ImportValue:
+                Fn::Sub: "EXP-${pVPCNAME}-VPC01"
+            MapPublicIpOnLaunch: false
+
+    EC2SubnetPriv1a:
+        Type: "AWS::EC2::Subnet"
+        Properties:
+            AvailabilityZone: !GetAtt EC2SubnetPub1a.AvailabilityZone
+            CidrBlock: "10.0.0.64/27"
+            VpcId:
+              Fn::ImportValue:
+                Fn::Sub: "EXP-${pVPCNAME}-VPC01"
+            MapPublicIpOnLaunch: false
+
+    EC2SubnetPub1a:
+        Type: "AWS::EC2::Subnet"
+        Properties:
+            AvailabilityZone: !Sub "${AWS::Region}a"
+            CidrBlock: "10.0.0.0/27"
+            VpcId:
+              Fn::ImportValue:
+                Fn::Sub: "EXP-${pVPCNAME}-VPC01" 
+            MapPublicIpOnLaunch: true
+
+    EC2SubnetPriv1b:
+        Type: "AWS::EC2::Subnet"
+        Properties:
+            AvailabilityZone: !Sub "${AWS::Region}b"
+            CidrBlock: "10.0.0.96/27"
+            VpcId:
+              Fn::ImportValue:
+                Fn::Sub: "EXP-${pVPCNAME}-VPC01"
+            MapPublicIpOnLaunch: false  
+  Outputs:
+    outEC2SubnetPub1a:
+      Description: Reference to Subnet EC2SubnetPub1a
+      Value:
+        Ref: EC2SubnetPub1a
+      Export:
+        Name: 
+          Fn::Sub: "EXP-${pVPCNAME}-EC2SubnetPub1a"
+
+    outEC2SubnetPub1b:
+      Description: Reference to Subnet EC2SubnetPub1b
+      Value:
+        Ref: EC2SubnetPub1b
+      Export:
+        Name: 
+          Fn::Sub: "EXP-${pVPCNAME}-EC2SubnetPub1b"
+   
+    outEC2SubnetPriv1a:
+      Description: Reference to Subnet EC2SubnetPriv1a
+      Value:
+        Ref: EC2SubnetPriv1a
+      Export:
+        Name: 
+          Fn::Sub: "EXP-${pVPCNAME}-EC2SubnetPriv1a"
+   
+    outEC2SubnetPriv1b:
+      Description: Reference to Subnet EC2SubnetPriv1b
+      Value:
+        Ref: EC2SubnetPriv1b
+      Export:
+        Name: 
+          Fn::Sub: "EXP-${pVPCNAME}-EC2SubnetPriv1b"
+
+    outEC2SubnetRDS1:
+      Description: Reference to Subnet EC2SubnetRDS1
+      Value:
+        Ref: EC2SubnetRDS1
+      Export:
+        Name: 
+          Fn::Sub: "EXP-${pVPCNAME}-EC2SubnetRDS1"
+   
+    outEC2SubnetRDS2:
+      Description: Reference to Subnet EC2SubnetRDS2
+      Value:
+        Ref: EC2SubnetRDS2
+      Export:
+        Name: 
+          Fn::Sub: "EXP-${pVPCNAME}-EC2SubnetRDS2"   
+          
